@@ -1,10 +1,10 @@
 # NLPLearning-ChatBot-LSTMBased
- This is a repository for LSTM based chatbot.
+ 这个仓库存放着基于LSTM的聊天机器人代码。
 
-i18n: English | [简体中文](/README_CN.md)
+i18n: 简体中文 | [English](/README.md)
 
-# File Tree
-The file tree of this repo as follow.
+# 文件目录树
+下面表示了仓库中的目录树
 ```
 .
 ├── LICENSE
@@ -66,20 +66,21 @@ tricha@TrichadeMac-mini NLPLearning-ChatBot-LSTMBased % tree -N
     └── 这里会存放生成的部分文件.txt
 ```
 
-# Intro
+# 介绍
 
-This project was built with data from this repo: [codemayq/chinese_chatbot_corpus](https://github.com/codemayq/chinese_chatbot_corpus).
+本仓库使用的数据集来源于这个仓库: [codemayq/chinese_chatbot_corpus](https://github.com/codemayq/chinese_chatbot_corpus).
 
-You should clone that repo first, and then, execute the python file. Then you will get a folder called `clean_chat_corpus`.
+为使用本仓库的代码，你需要先克隆上方的仓库，按照链接中的指示去执行相应的文件，最后可以得到一个叫做`clean_chat_corpus`的文件夹。
 
-Clone this repo, move or copy that folder to the path `/data/clean_chat_corpus`. Then you can excute with `python main.py` in the terminal open in this root.
+然后克隆本仓库，将上述文件夹拷贝或移动到目录 `/data/clean_chat_corpus`下。然后可以在cmd或terminal中执行命令 `python main.py`来执行本仓库的代码。
 
-Change the variables on the file `main.py` if you need to use different datasets or train methods.
+如果你需要使用不同的数据及或者训练方法以及其他参数，可以在文件`main.py`中更改。
 
-Cause of the rule on github, I use some txt files to take space for some empty folder, ignore it is ok.
+由于github的限制，在这里使用了数个txt文档作为必要文件夹的占位，你可以删除或忽视他们。
 
-# About
+# 关于
 
-I create it just for my Graduation Project and thesis. I can not promise all the code is right.
+这个仓库仅用于我的毕业设计和毕业论文。因此无法保证全部代码和数据的准确性。
 
-I reserve the right to make adjustments without prior notification.
+此仓库所有者保留一切随时变更内容的权利，恕不另行通知。
+
