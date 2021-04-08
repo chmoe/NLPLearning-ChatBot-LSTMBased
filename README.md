@@ -76,7 +76,7 @@ Clone this repo, move or copy that folder to the path `/data/clean_chat_corpus`.
 
 Change the variables on the file `main.py` if you need to use different datasets or train methods.
 
-Cause of the rule on github, I use some txt files to take space for some empty folder, ignore it is ok.
+Cause of the rule on github, I use some txt files to take space for some empty folder, ignore those txt files is required.
 
 # About
 
