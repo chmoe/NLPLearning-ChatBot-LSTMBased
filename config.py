@@ -6,8 +6,8 @@ from enum import Enum
 
 #%%
 class Config(object):
-    Source_Name = Enum('Name', ('Douban_single', 'Douban_multi', 'Qingyun', 'Tieba', 'Weibo', 'Xiaohuangji'))
-    File_Kind = Enum('Name', ('Question', 'Answer', 'Que_Ans', "Que_Vec", "Ans_Vec", "Gen_Mod", "Gen_Vec", "Gen_VecB"))
+    Source_Name = Enum('Name', ('Douban_single', 'Douban_multi', 'Qingyun', 'Tieba', 'Weibo', 'Xiaohuangji', "Mem"))
+    File_Kind = Enum('Name', ('Question', 'Answer', 'Que_Ans', "Que_Vec", "Ans_Vec", "Gen_Mod", "Gen_Vec", "Gen_VecB", "Model"))
     encoding = 'utf-8'
 
     # 各种路径
@@ -21,6 +21,8 @@ class Config(object):
     # 各种文件名
     name_train_file_question = "_question.txt" # 用于训练的问题文件（切割好
     name_train_file_answer = "_answer.txt" # 用于训练的答案文件（切割好
+    name_question_list = 'Question_List.txt' # 问题列表（未切割
+    name_answer_list = 'Answer_List.txt' # 答案列表（未切割
     name_train_file_que_ans = "_que_ans.txt" # 合并问题和答案的文件（切割好(gensim)
     name_word2vec_model = "_word2vec_gensim.model" # 训练好的词向量模型(gensim)
     name_word2vec_vector = "_word2vec_gensim.vector" # 得到的词向量(gensim)
@@ -29,12 +31,12 @@ class Config(object):
     name_train_file_question_vec = "_question_vec.npy" # 训练好的问题集词向量(tf)
     name_train_file_answer_vec = "_answer_vec.npy" # 训练好的答案集词向量(tf)
     name_word_list_file = "word_dict.npy" # 保存有词语和每个词语出现的次数(tf)
-    name_train_file_train_model = "model.h5" # 训练好的模型
+    name_train_file_train_model = "_model.h5" # 训练好的模型
     name_stopword_file = "cn_stopwords.txt" # 停用词表
 
     # 组合好的路径
     path_word_vector = path_data_finder + name_file_word_vector # 词向量(txt)
-    path_train_model = path_model_finder + name_train_file_train_model # 训练好的模型(h5)
+    # path_train_model = path_model_finder + name_train_file_train_model # 训练好的模型(h5)
     path_stopword = path_data_others_finder + name_stopword_file
     path_word_list_file = path_tmp_finder + name_word_list_file
 
@@ -53,6 +55,8 @@ class Config(object):
             return "weibo"
         elif kind_name == Config.Source_Name.Xiaohuangji:
             return "xiaohuangji"
+        elif kind_name == Config.Source_Name.Mem:
+            return "mem"
         else: return "NULL"
     @staticmethod
     def get_path(kind_name, file_kind):
@@ -76,6 +80,8 @@ class Config(object):
             return os.path.join(Config.path_tmp_finder, name + Config.name_word2vec_vector)
         elif file_kind == Config.File_Kind.Gen_VecB:
             return os.path.join(Config.path_tmp_finder, name + Config.name_word2vec_vector_bin)
+        elif file_kind == Config.File_Kind.Model:
+            return os.path.join(Config.path_model_finder, name + Config.name_train_file_train_model)
     @staticmethod
     def get_sourse_path(kind_name):
         '''
@@ -93,11 +99,13 @@ class Config(object):
             return os.path.join(Config.path_source_finder, "weibo.tsv")
         elif kind_name == Config.Source_Name.Xiaohuangji:
             return os.path.join(Config.path_source_finder, "xiaohuangji.tsv")
+        elif kind_name == Config.Source_Name.Mem:
+            return os.path.join(Config.path_data_finder, 'chatmem_pre.tsv')
         else: return "NULL"
 #%%
 # Config.get_sourse_path(Config.Source_Name.Tieba)
 # # %%
 # Config.get_path(Config.Source_Name.Douban_single, Config.File_Kind.Question)
 # %%
-
+# str(Config.Source_Name.Xiaohuangji)[5:]
 # %%

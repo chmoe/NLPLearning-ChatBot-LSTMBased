@@ -46,7 +46,7 @@ def process_source_file(source_name):
     train_df = train_df.astype(str)
     # %% 将答案和问题分别保存到两个文件中
     # series转txt参考：https://zhuanlan.zhihu.com/p/32672042
-    train_df[0].to_csv(Config.path_tmp_finder + 'Question_List.txt', header = None, index=False)
-    train_df[1].to_csv(Config.path_tmp_finder + 'Answer_List.txt', header = None, index=False)
-    split_word_from_file(Config.path_tmp_finder + 'Question_List.txt', Config.get_path(source_name, Config.File_Kind.Question))
-    split_word_from_file(Config.path_tmp_finder + 'Answer_List.txt', Config.get_path(source_name, Config.File_Kind.Answer))
+    train_df[0].to_csv(Config.path_tmp_finder + Config.name_question_list, header = None, index=False)
+    train_df[1].to_csv(Config.path_tmp_finder + Config.name_answer_list, header = None, index=False)
+    split_word_from_file(Config.path_tmp_finder + Config.name_question_list, Config.get_path(source_name, Config.File_Kind.Question))
+    split_word_from_file(Config.path_tmp_finder + Config.name_answer_list, Config.get_path(source_name, Config.File_Kind.Answer))

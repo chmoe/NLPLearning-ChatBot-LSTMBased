@@ -11,6 +11,7 @@ import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM
 from tensorflow.keras.layers import RepeatVector, Dense, TimeDistributed
+from tensorflow.keras.callbacks import ReduceLROnPlateau
 
 # %%
 def get_dict(source_name):
@@ -93,7 +94,7 @@ def qaword2vec(source_name, line_limit, len_limit):
 
 
 # %%
-def seq2seq(X_vector, Y_vector, epoch_time):
+def seq2seq(source_name, X_vector, Y_vector, epoch_time):
     # 将 X_vector、Y_vector 转化为数组形式
     X_vector = np.array(X_vector, dtype=np.float32)
     Y_vector = np.array(Y_vector, dtype=np.float32)
@@ -140,22 +141,24 @@ def seq2seq(X_vector, Y_vector, epoch_time):
     # 编译模型
     model.compile(loss='mse', optimizer='Adam', metrics=['accuracy'])
 
+    reduce_lr = ReduceLROnPlateau(monitor='loss', patience=10, mode='auto') #(监测目标='val_loss'，patience=10调整频率每10个epoch看下目标loss）
     
 
-    checkpoint_path = Config.path_model_tmp_finder + "cp-{epoch:04d}.ckpt"
+    checkpoint_path = Config.path_model_tmp_finder + Config.get_path_with_kind(source_name) + "/cp-{epoch:04d}.ckpt"
     checkpoint_dir = os.path.dirname(checkpoint_path)
+    print("checkpoint_dir", checkpoint_dir)
 
     # 创建一个保存模型权重的回调
     cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
                                                  save_weights_only=True,
                                                  verbose=1, period=5)
-
-    if os.path.exists(Config.path_model_tmp_finder + 'checkpoint'):
+    # cp_remote_monitor = tf.keras.callbacks.RemoteMonitor('https://qmsg.zendee.cn/send/e99a51cc4de18da360ad03f278b44147', )
+    if os.path.exists(Config.path_model_tmp_finder + Config.get_path_with_kind(source_name) + '/checkpoint'):
         latest = tf.train.latest_checkpoint(checkpoint_dir)
         model.load_weights(latest)
-        tmp_len = len(Config.path_model_tmp_finder) + 3 # 路径长度
+        tmp_len = len(Config.path_model_tmp_finder + Config.get_path_with_kind(source_name)) + 4 # 路径长度
         start_epoch_value = int(latest[tmp_len:tmp_len + 4])
-        model.fit(X_train, Y_train, epochs=epoch_time, validation_data=(X_test, Y_test), callbacks=[cp_callback], initial_epoch=start_epoch_value)
+        model.fit(X_train, Y_train, epochs=epoch_time, validation_data=(X_test, Y_test), callbacks=[cp_callback, reduce_lr], initial_epoch=start_epoch_value)
     else:
 
         # 使用 `checkpoint_path` 格式保存权重
@@ -165,9 +168,10 @@ def seq2seq(X_vector, Y_vector, epoch_time):
         # 报错：TypeError: fit() got an unexpected keyword argument 'nb_epoch'
         # 参考内容：https://github.com/keras-team/keras/issues/14135#issuecomment-649105439
         # model.fit(X_train, Y_train, epochs=5000, validation_data=(X_test, Y_test), callbacks=[cp_callback])
-        model.fit(X_train, Y_train, epochs=epoch_time, callbacks=[cp_callback])
-    model.save(Config.path_train_model)
-
+        model.fit(X_train, Y_train, epochs=epoch_time, callbacks=[cp_callback, reduce_lr])
+    model.save(Config.get_path(source_name, Config.File_Kind.Model))
+    score = model.evaluate(X_test, Y_test, batch_size=128, verbose=1)
+    print("训练得分：", score)
     return model
 
 
@@ -175,7 +179,7 @@ def seq2seq(X_vector, Y_vector, epoch_time):
 def train_model_gensim(source_name, line_limit, len_limit, epoch_time):
     qlist, alist = qaword2vec(source_name, line_limit, len_limit)
     print("问答list成功向量化")
-    model = seq2seq(qlist, alist, epoch_time)
+    model = seq2seq(source_name, qlist, alist, epoch_time)
 # # %%
 # import pandas as pd
 # train_df = pd.read_csv('../data/clean_chat_corpus/douban.tsv', sep = '\t', header=None)
