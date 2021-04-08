@@ -6,36 +6,7 @@ i18n: English | [简体中文](/README_CN.md)
 # File Tree
 The file tree of this repo as follow.
 ```
-.
-├── LICENSE
-├── README.md
-├── config.py
-├── data
-│   ├── clean_chat_corpus
-│   │   └── 在这里存放语料库.txt
-│   └── others
-│       └── cn_stopwords.txt
-├── main.py
-├── model
-│   ├── result
-│   │   └── 在这里会生成训练好的模型.txt
-│   └── tmp
-│       └── 这里会存放训练过程中的中间文件.txt
-├── process_pipelines
-│   ├── Chat_gensim.py
-│   ├── Chat_tf.py
-│   ├── PreProcess.py
-│   ├── PreProcess.pyc
-│   ├── Train_gensim.py
-│   ├── Train_tf.py
-│   ├── Word2Vec.py
-│   ├── Word2Vec_gensim.py
-│   └── __init__.py
-└── tmp
-    └── 这里会存放生成的部分文件.txt
-
-8 directories, 18 files
-tricha@TrichadeMac-mini NLPLearning-ChatBot-LSTMBased % tree -N
+% tree -N
 .
 ├── LICENSE
 ├── README.md
