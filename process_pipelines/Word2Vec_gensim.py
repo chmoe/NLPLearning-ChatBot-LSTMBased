@@ -35,22 +35,22 @@ def combine_question_answer(source_name):
 
 def train_word2vec_gensim(source_name, embedding_size, skip_window, min_count):
     combine_path = combine_question_answer(source_name)
-    if not os.path.exists(Config.get_path(source_name, Config.File_Kind.Gen_Mod)):
+    if not os.path.exists(Config.get_path(source_name, Config.File_Kind.Gen_Mod, embedding_size)):
         print("即将开始训练(gensim)")
         model = Word2Vec(LineSentence(combine_path), vector_size=embedding_size, window=skip_window, min_count=min_count, workers=multiprocessing.cpu_count())
         print("词向量训练完成(gensim)")
         print("正在保存模型 ")
-        model.save(Config.get_path(source_name, Config.File_Kind.Gen_Mod))
-        print("模型保存完成" + Config.get_path(source_name, Config.File_Kind.Gen_Mod))
+        model.save(Config.get_path(source_name, Config.File_Kind.Gen_Mod, embedding_size))
+        print("模型保存完成" + Config.get_path(source_name, Config.File_Kind.Gen_Mod, embedding_size))
     else:
         print("模型已经存在，将直接加载模型")
-        model = Word2Vec.load(Config.get_path(source_name, Config.File_Kind.Gen_Mod))
+        model = Word2Vec.load(Config.get_path(source_name, Config.File_Kind.Gen_Mod, embedding_size))
     print("正在保存词向量")
-    model.wv.save_word2vec_format(Config.get_path(source_name, Config.File_Kind.Gen_Vec), binary=False) # 非二进制
-    print("词向量保存完成：", (Config.get_path(source_name, Config.File_Kind.Gen_Vec)))
+    model.wv.save_word2vec_format(Config.get_path(source_name, Config.File_Kind.Gen_Vec, embedding_size), binary=False) # 非二进制
+    print("词向量保存完成：", (Config.get_path(source_name, Config.File_Kind.Gen_Vec, embedding_size)))
     print("正在保存词向量(bin)")
-    model.wv.save_word2vec_format(Config.get_path(source_name, Config.File_Kind.Gen_VecB), binary=True)
-    print("词向量保存完成：", (Config.get_path(source_name, Config.File_Kind.Gen_VecB)))
+    model.wv.save_word2vec_format(Config.get_path(source_name, Config.File_Kind.Gen_VecB, embedding_size), binary=True)
+    print("词向量保存完成：", (Config.get_path(source_name, Config.File_Kind.Gen_VecB, embedding_size)))
 
 '''
 报错解决：AttributeError: ‘Word2VecKeyedVectors‘ object has no attribute ‘save_Word2Vec_format‘

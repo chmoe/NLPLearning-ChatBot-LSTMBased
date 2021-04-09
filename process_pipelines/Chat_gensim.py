@@ -8,8 +8,8 @@ import jieba
 import gensim.models
 
 
-def load_word_dic(source_name):
-    model = gensim.models.KeyedVectors.load_word2vec_format(Config.get_path(source_name, Config.File_Kind.Gen_VecB), binary=True)
+def load_word_dic(source_name, embedding_size):
+    model = gensim.models.KeyedVectors.load_word2vec_format(Config.get_path(source_name, Config.File_Kind.Gen_VecB, embedding_size), binary=True)
     return model
 
 def line2wordvec(list_line, model, sentend, len_limit):
@@ -48,9 +48,9 @@ def get_answer(input_str, model, sentend, chat_model, len_limit):
     # answer_list = 
 
 
-def chat_gensim(source_name, len_limit):
-    chat_model = load_model(Config.get_path(source_name, Config.File_Kind.Model)) # 加载训练好的模型
-    model = load_word_dic(source_name)
+def chat_gensim(source_name, len_limit, embedding_size, epoch_time):
+    chat_model = load_model(Config.get_path(source_name, Config.File_Kind.Model, embedding_size, 'gensim', epoch_time)) # 加载训练好的模型
+    model = load_word_dic(source_name, embedding_size)
     word_dim = len(model['你']) # 计算词向量维度
     print("词向量维度为：", word_dim)
     sentend = np.ones((word_dim,), dtype = np.float32) # 设置结束词
@@ -66,12 +66,12 @@ def chat_gensim(source_name, len_limit):
 
 # %%
 # import gensim.models
-# model = gensim.models.KeyedVectors.load_word2vec_format('../tmp/xiaohuangji_word2vec_gensim.bin', binary=True)
+# model = gensim.models.KeyedVectors.load_word2vec_format('../tmp/mem_word2vec_gensim.bin', binary=True)
 # model['你']
 # # %%
-# model.similar_by_word('女朋友',topn=10) # 查看相似度前10的词语
+# model.similar_by_word('你',topn=10) # 查看相似度前10的词语
 # # %%
 
 # # %%
-# '女朋友' in model
-# # %%
+# '猹' in model
+# %%

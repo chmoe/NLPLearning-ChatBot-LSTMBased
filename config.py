@@ -59,7 +59,7 @@ class Config(object):
             return "mem"
         else: return "NULL"
     @staticmethod
-    def get_path(kind_name, file_kind):
+    def get_path(kind_name, file_kind, embedding_size = '', kind = '', epoch = ''):
         '''
         获取不同路径
         '''
@@ -75,13 +75,13 @@ class Config(object):
         elif file_kind == Config.File_Kind.Que_Ans:
             return os.path.join(Config.path_tmp_finder, name + Config.name_train_file_que_ans)
         elif file_kind == Config.File_Kind.Gen_Mod:
-            return os.path.join(Config.path_tmp_finder, name + Config.name_word2vec_model)
+            return os.path.join(Config.path_tmp_finder, name + "_" + str(embedding_size) + Config.name_word2vec_model)
         elif file_kind == Config.File_Kind.Gen_Vec:
-            return os.path.join(Config.path_tmp_finder, name + Config.name_word2vec_vector)
+            return os.path.join(Config.path_tmp_finder, name + "_" + str(embedding_size) + Config.name_word2vec_vector)
         elif file_kind == Config.File_Kind.Gen_VecB:
-            return os.path.join(Config.path_tmp_finder, name + Config.name_word2vec_vector_bin)
+            return os.path.join(Config.path_tmp_finder, name + "_" + str(embedding_size) + Config.name_word2vec_vector_bin)
         elif file_kind == Config.File_Kind.Model:
-            return os.path.join(Config.path_model_finder, name + Config.name_train_file_train_model)
+            return os.path.join(Config.path_model_finder, name + "_" + str(embedding_size)+ "_" + kind + "_" + str(epoch) + Config.name_train_file_train_model)
     @staticmethod
     def get_sourse_path(kind_name):
         '''

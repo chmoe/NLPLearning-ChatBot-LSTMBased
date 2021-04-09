@@ -26,7 +26,7 @@ def import_word_vector():
     return dic
 
 # %%
-def line2wordvec(list_line, word_dim, sentend, unk, word_vector_dict, len_limit):
+def line2wordvec(list_line, word_dim, sentend, word_vector_dict, len_limit):
     """
     处理传入的切割好的一行的list
     长度超过14则删除后边的内容，不足则使用sentend补全
@@ -66,7 +66,7 @@ def qaword2vec(source_name, line_limit, len_limit):
             index += 1
             if index >= line_limit: break # 限制长度为100w
             tmp_line_split_list = line.split()
-            processeed_line_wordvec_list = line2wordvec(tmp_line_split_list, word_dim, sentend, unk, word_vector_dict, len_limit) # 按照14个限定处理好之后的wordvec的list
+            processeed_line_wordvec_list = line2wordvec(tmp_line_split_list, word_dim, sentend, word_vector_dict, len_limit) # 按照14个限定处理好之后的wordvec的list
             qlist.append(processeed_line_wordvec_list)
     np.save(Config.get_path(source_name, Config.File_Kind.Que_Vec), qlist)
 
@@ -77,7 +77,7 @@ def qaword2vec(source_name, line_limit, len_limit):
             index += 1
             if index >= line_limit: break # 限制长度为100w
             tmp_line_split_list = line.split()
-            processeed_line_wordvec_list = line2wordvec(tmp_line_split_list, word_dim, sentend, unk, word_vector_dict, len_limit) # 按照14个限定处理好之后的wordvec的list
+            processeed_line_wordvec_list = line2wordvec(tmp_line_split_list, word_dim, sentend, word_vector_dict, len_limit) # 按照14个限定处理好之后的wordvec的list
             alist.append(processeed_line_wordvec_list)
     np.save(Config.get_path(source_name, Config.File_Kind.Ans_Vec), alist)
 
@@ -86,7 +86,7 @@ def qaword2vec(source_name, line_limit, len_limit):
 
 
 # %%
-def seq2seq(X_vector, Y_vector, epoch_time):
+def seq2seq(source_name, X_vector, Y_vector, epoch_time, embedding_size):
     # 将 X_vector、Y_vector 转化为数组形式
     X_vector = np.array(X_vector, dtype=np.float32)
     Y_vector = np.array(Y_vector, dtype=np.float32)
@@ -159,14 +159,14 @@ def seq2seq(X_vector, Y_vector, epoch_time):
         # 参考内容：https://github.com/keras-team/keras/issues/14135#issuecomment-649105439
         # model.fit(X_train, Y_train, epochs=5000, validation_data=(X_test, Y_test), callbacks=[cp_callback])
         model.fit(X_train, Y_train, epochs=epoch_time, callbacks=[cp_callback])
-    model.save(Config.get_path(source_name, Config.File_Kind.Model))
+    model.save(Config.get_path(source_name, Config.File_Kind.Model, embedding_size, 'tf', epoch_time))
 
     return model
 
 
 # %%
-def train_model_tf(source_name, line_limit, len_limit, epoch_time):
+def train_model_tf(source_name, line_limit, len_limit, epoch_time, embedding_size):
     qlist, alist = qaword2vec(source_name, line_limit, len_limit)
     print("问答list成功向量化")
-    model = seq2seq(source_name, qlist, alist, epoch_time)
+    model = seq2seq(source_name, qlist, alist, epoch_time, embedding_size)
 # %%

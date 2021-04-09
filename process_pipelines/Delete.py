@@ -22,28 +22,50 @@ def del_path_list(path_list):
         else:
             print("未找到", item, "即将跳过...")
 
-def remove_file(use_gensim, source_name, qasplit, word2vec, train_tmp, train_model):
+def remove_file(use_gensim=True, source_name=False, qasplit=False, word2vec=False, train_tmp=False, train_model=False, embedding_size=50, epoch_time = 50, all_ = False):
     delete_file_list = []
-    if qasplit:
-        delete_file_list.append(Config.path_tmp_finder + Config.name_question_list)
-        delete_file_list.append(Config.path_tmp_finder + Config.name_answer_list)
-        delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Question))
-        delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Answer))
-        delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Que_Ans))
-    if use_gensim:
-        if word2vec:
-            delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Gen_Mod))
-            delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Gen_Vec))
-            delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Gen_VecB))
+    if all_:
+        delete_file_list = [
+            Config.path_tmp_finder + Config.name_question_list,
+            Config.path_tmp_finder + Config.name_answer_list,
+            Config.get_path(source_name, Config.File_Kind.Question),
+            Config.get_path(source_name, Config.File_Kind.Answer),
+            Config.get_path(source_name, Config.File_Kind.Que_Ans),
+            Config.get_path(source_name, Config.File_Kind.Gen_Mod, embedding_size),
+            Config.get_path(source_name, Config.File_Kind.Gen_Vec, embedding_size),
+            Config.get_path(source_name, Config.File_Kind.Gen_VecB, embedding_size),
+            Config.get_path(source_name, Config.File_Kind.Model, embedding_size, 'gensim'),
+            Config.path_word_list_file,
+            Config.path_word_vector,
+            Config.get_path(source_name, Config.File_Kind.Que_Vec),
+            Config.get_path(source_name, Config.File_Kind.Ans_Vec),
+            Config.get_path(source_name, Config.File_Kind.Model, embedding_size, 'tf'),
+            Config.path_model_tmp_finder + Config.get_path_with_kind(source_name)+"/",
+        ]
     else:
-        if word2vec:
-            delete_file_list.append(Config.path_word_list_file)
-            delete_file_list.append(Config.path_word_vector)
+        if qasplit:
+            delete_file_list.append(Config.path_tmp_finder + Config.name_question_list)
+            delete_file_list.append(Config.path_tmp_finder + Config.name_answer_list)
+            delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Question))
+            delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Answer))
+            delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Que_Ans))
+        if use_gensim:
+            if word2vec:
+                delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Gen_Mod, embedding_size))
+                delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Gen_Vec, embedding_size))
+                delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Gen_VecB, embedding_size))
+
+            if train_model:
+                delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Model, embedding_size, 'gensim', epoch_time))
+        else:
+            if word2vec:
+                delete_file_list.append(Config.path_word_list_file)
+                delete_file_list.append(Config.path_word_vector)
+            if train_tmp:
+                delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Que_Vec))
+                delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Ans_Vec))
+            if train_model:
+                delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Model, embedding_size, 'tf', epoch_time))
         if train_tmp:
-            delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Que_Vec))
-            delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Ans_Vec))
-    if train_tmp:
-        delete_file_list.append(Config.path_model_tmp_finder + Config.get_path_with_kind(source_name)+"/")
-    if train_model:
-        delete_file_list.append(Config.get_path(source_name, Config.File_Kind.Model))
+            delete_file_list.append(Config.path_model_tmp_finder + Config.get_path_with_kind(source_name)+"/")
     del_path_list(delete_file_list)

@@ -61,7 +61,7 @@ def get_answer(input_str, word_vector_dict, chat_model, sentend):
 
 # %%
 
-def compute_similarity(answer_array_list):
+def compute_similarity(answer_array_list, word_vector_dict):
     '''
     循环计算每个向量和词典中向量的相似度，找出相似度最接近的项目
     然后返回拼接好的答案
@@ -97,9 +97,9 @@ def compute_similarity(answer_array_list):
 
 
 # %%
-def chat_tf():
+def chat_tf(source_name, embedding_size, epoch_time):
     word_vector_dict = import_word_vector() # 词向量字典
-    chat_model = load_model(Config.path_train_model) # 加载训练好的模型
+    chat_model = load_model(Config.get_path(source_name, Config.File_Kind.Model, embedding_size, 'tf', epoch_time)) # 加载训练好的模型
     word_dim = len(word_vector_dict['说']) # 计算词向量维度
     print("词向量维度为（chat_tf）：", word_dim)
     sentend = np.ones((word_dim,), dtype = np.float32) # 设置结束词
@@ -108,5 +108,5 @@ def chat_tf():
         question = input("请输入：")
         answer = get_answer(question, word_vector_dict, chat_model, sentend)
         print(answer.shape)
-        result = compute_similarity(answer[0])
+        result = compute_similarity(answer[0], word_vector_dict)
         print(result)
